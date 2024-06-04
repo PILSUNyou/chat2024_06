@@ -13,7 +13,9 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
     public void make(String name){
-        ChatRoom chatRoom = new ChatRoom(name);
+        ChatRoom chatRoom = ChatRoom.builder()  // application에서 EnableJpaAuditing 에너테이션을 사용해서 createdate를 쓰지 않아도 된다.
+                .name(name)
+                .build();
 
         chatRoomRepository.save(chatRoom);
     }
