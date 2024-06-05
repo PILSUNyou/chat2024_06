@@ -1,8 +1,12 @@
 package com.ll.chat_2024_06_03.domain.chat.chatRoom.controller;
 
+import com.ll.chat_2024_06_03.domain.chat.chatRoom.entity.ChatMessage;
 import com.ll.chat_2024_06_03.domain.chat.chatRoom.entity.ChatRoom;
 import com.ll.chat_2024_06_03.domain.chat.chatRoom.service.ChatRoomService;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -47,13 +51,28 @@ public class ChatRoomController {
         return "domain/chat/chatRoom/list";
     }
 
-    @PostMapping("/{roomId}/write")
-    public String write(
-            @PathVariable("roomId") final long roomId,
-            @RequestParam(value="writerName") final String writerName,
-            @RequestParam(value="content") final String content
-    ){
-        chatRoomService.write(roomId, writerName, content);
-        return "redirect:/chat/room/" + roomId;
+    @Getter
+    @Setter
+    public static class WriterRequestBody{
+        private String writerName;
+        private String content;
     }
+
+    @Setter
+    @AllArgsConstructor
+    public static class WriterResponseBody{
+        private long chatMessageId;
+    }
+
+    @PostMapping("/{roomId}/write")
+    @ResponseBody
+    public WriterResponseBody write(
+            @PathVariable("roomId") final long roomId,
+            @RequestBody final WriterRequestBody requestBody
+    ){
+        ChatMessage chatMessage = chatRoomService.write(roomId, requestBody.getWriterName(), requestBody.getContent());
+
+        return new WriterResponseBody(chatMessage.getId());
+    }
+
 }
