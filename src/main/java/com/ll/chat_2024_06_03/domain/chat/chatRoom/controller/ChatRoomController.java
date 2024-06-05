@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.Writer;
 import java.util.List;
 
 @Controller
@@ -74,6 +75,21 @@ public class ChatRoomController {
         ChatMessage chatMessage = chatRoomService.write(roomId, requestBody.getWriterName(), requestBody.getContent());
 
         return RsData.of("S-1", "%d번 메세지를 작성하였습니다.".formatted(chatMessage.getId()), new WriterResponseBody(chatMessage.getId()));
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class GetMessagesAfterResponseBody{
+
+    }
+
+    @PostMapping("/{roomId}/MessagesAfter/{formChatMessageId}")
+    @ResponseBody
+    public RsData<GetMessagesAfterResponseBody> getMessagesAfter(
+            @PathVariable("roomId") final long roomId,
+            @PathVariable("formChatMessageId") final long formChatMessageId
+    ){
+        return null;
     }
 
 }
